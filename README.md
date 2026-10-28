@@ -42,6 +42,35 @@ This project demonstrates communication between two separate Amazon Virtual Priv
 
 The VPC peering connection links VPC A and VPC B. Routes are configured in both VPCs to direct traffic to the remote VPC CIDR through the peering connection.
 
+### AWS VPC Peering Architecture
+
+```mermaid
+flowchart LR
+    subgraph A["VPC A - 10.10.0.0/16"]
+        direction TB
+        subgraph AP["Public Subnet - 10.10.1.0/24"]
+            B["Bastion EC2<br/>10.10.1.24"]
+        end
+        subgraph APR["Private Subnet - 10.10.2.0/24"]
+            AA["App-A EC2<br/>10.10.2.10"]
+        end
+    end
+
+    P["VPC Peering Connection<br/>Active"]
+
+    subgraph C["VPC B - 10.20.0.0/16"]
+        subgraph BPR["Private Subnet - 10.20.1.0/24"]
+            AB["App-B EC2<br/>10.20.1.10"]
+        end
+    end
+
+    A <--> P
+    P <--> C
+    B --> AA
+    AB <--> AA
+```
+
+
 ## 5. Implementation Steps
 
 1. Created VPC A and VPC B with non-overlapping CIDR ranges.
